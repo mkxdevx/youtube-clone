@@ -11,6 +11,7 @@
 .side-video-list img {
     flex-basis: 49%;
     width: 50%;
+    border-radius: 4px;
 }
 
 .vid-info {
@@ -31,4 +32,10 @@
 
 .vid-info p:nth-child(3) {
     font-weight: 500;
+}
+
+@media (max-width: 900px) {
+    .recommended {
+        flex-basis: 100%;
+    }
 }

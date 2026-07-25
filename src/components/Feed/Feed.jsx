@@ -9,20 +9,23 @@ import thumbnail6 from "../../assets/thumbnail6.png";
 import thumbnail7 from "../../assets/thumbnail7.png";
 import thumbnail8 from "../../assets/thumbnail8.png";
 import { Link } from "react-router-dom";
-import { API_KEY } from "../../data";
+import { API_KEY, valueConverter } from "../../data";
+import axios from "axios";
+import moment from "moment";
 
 const Feed = ({ category }) => {
   const [data, setData] = useState([]);
 
-  function fetchData() {
-    const { items } =
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=US&videoCategoryId=${category}&key=${API_KEY}`;
+  async function fetchData() {
+    const videoList = await axios.get(
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=US&videoCategoryId=${category}&key=${API_KEY}`,
+    );
+    const { items } = videoList.data;
     setData(items);
   }
 
   useEffect(() => {
     fetchData();
-    console.log(data);
   }, [category]);
 
   return (
@@ -35,12 +38,12 @@ const Feed = ({ category }) => {
               className="card"
               key={index}
             >
-              <img src={thumbnail1} alt="" />
+              <img src={item.snippet.thumbnails.medium.url} alt="" />
               <h2>
-                Best channel to learn coding that help you to be a web developer
+                {item.snippet.title}
               </h2>
-              <h3>Greatstack</h3>
-              <p>15k views &bull; 2 days ago</p>
+              <h3>{item.snippet.channelTitle}</h3>
+              <p>{valueConverter(item.statistics.viewCount)} views &bull; {moment(item.snippet.publishedAt).fromNow()}</p>
             </Link>
           );
         })}
