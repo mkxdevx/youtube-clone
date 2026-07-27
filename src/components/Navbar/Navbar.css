@@ -55,12 +55,13 @@ nav {
     }
     .nav-right .user-icon {
         display: block;
-        width: 30px;
+        width: 36px;
+        margin-right: 0;
     }
     .logo {
         width: 90px;
     }
     .nav-middle .search-box input {
-        width: 100px;
+        width: 300px;
     }
 }

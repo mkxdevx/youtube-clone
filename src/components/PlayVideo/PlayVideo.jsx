@@ -101,7 +101,9 @@ const PlayVideo = () => {
         <button>Subscribe</button>
       </div>
       <div className="vid-description">
-        <p>{apiData && apiData.snippet.description.slice(0, 250)}</p>
+        <p>{apiData && apiData.snippet.description.slice(0, 250) + "..."}</p>
+        <div className="center">
+            <button className="toggle-button">Show More</button></div>
         <hr />
         <h4>
           {apiData && valueConverter(apiData.statistics.commentCount)} Comments

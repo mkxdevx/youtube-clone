@@ -40,10 +40,21 @@
 }
 
 .play-video hr {
+    margin: 10px 0;
+    background: #ccc;
+}
+
+.play-video hr,
+.center hr {
     border: 0;
     height: 1px;
-    background: #ccc;
-    margin: 10px 0;
+}
+
+.center hr {
+    margin-top: 5px;
+    margin-bottom: -1px;
+    width: 10%;
+    background: red;
 }
 
 .publisher {
@@ -74,14 +85,40 @@
     color: #5a5a5a;
 }
 
-.publisher button {
+button {
     background: red;
     color: #fff;
-    padding: 8px 30px;
+    padding: 12px 24px;
+    border-radius: 36px;
+    font-size: 14px;
     border: 0;
     outline: 0;
-    border-radius: 4px;
     cursor: pointer;
+    transition: all 300ms ease;
+}
+
+.toggle-button {
+    background: none;
+    color: #5a5a5a;
+    padding: 4px 8px;
+    font-size: 14px;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+button:hover {
+    color: #fff;
+    background: #cc0000;
+}
+
+button:active {
+    scale: 0.9;
+    background: red;
 }
 
 .vid-description {
@@ -159,4 +196,8 @@
         margin-right: 15px;
         margin-top: 15px;
     }
+    .publisher button {
+        margin-right: 10px;
+    }
+    
 }
