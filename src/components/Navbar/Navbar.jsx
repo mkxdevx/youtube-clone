@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = ({ setSidebar }) => {
   return (
-    <nav className='"flex-div'>
+    <nav className='flex-div'>
       <div className="nav-left flex-div">
         <img
           className="menu-icon"

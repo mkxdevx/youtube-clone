@@ -13,11 +13,15 @@ import moment from "moment";
 import { useParams } from "react-router-dom";
 
 const PlayVideo = () => {
-    const { videoId } = useParams();
+  const { videoId } = useParams();
+  const characterLimit = 310;
+  const commentLimit = 2;
 
   const [apiData, setApiData] = useState(null);
   const [channelData, setChannelData] = useState(null);
   const [commentData, setCommentData] = useState([]);
+  const [desIsExpanded, setDesIsExpanded] = useState(false);
+
 
   async function fetchVideoData() {
     // fetching videos data
@@ -41,6 +45,7 @@ const PlayVideo = () => {
     const commentDetails = await axios.get(
       `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=50&videoId=${videoId}&key=${API_KEY}`,
     );
+
     setCommentData(commentDetails.data.items);
   }
 
@@ -65,12 +70,12 @@ const PlayVideo = () => {
       <h3>{apiData && apiData.snippet.title}</h3>
       <div className="play-video-info">
         <p>
-          {apiData && valueConverter(apiData.statistics.viewCount)} views &bull;{" "}
+          {apiData && valueConverter(apiData.statistics.viewCount)} views &bull;
           {apiData && moment(apiData.snippet.publishedAt).fromNow()}
         </p>
         <div>
           <span>
-            <img src={like} alt="" />{" "}
+            <img src={like} alt="" />
             {apiData && valueConverter(apiData.statistics.likeCount)}
           </span>
           <span>
@@ -101,23 +106,29 @@ const PlayVideo = () => {
         <button>Subscribe</button>
       </div>
       <div className="vid-description">
-        <p>{apiData && apiData.snippet.description.slice(0, 250) + "..."}</p>
+        <p>{apiData && (desIsExpanded ? `${apiData.snippet.description}` : `${apiData.snippet.description.slice(0, characterLimit) + '...'}`)}</p>
         <div className="center">
-            <button className="toggle-button">Show More</button></div>
+          <button
+            className={`toggle-button ${characterLimit >= (apiData && apiData.snippet.description.length) && 'hide-button'}`}
+            onClick={() => setDesIsExpanded(!desIsExpanded)}
+          >
+            {desIsExpanded ? 'Hide' : 'Show More'}
+          </button>
+        </div>
         <hr />
         <h4>
-          {apiData && valueConverter(apiData.statistics.commentCount)} Comments
+          {apiData && (apiData.statistics.commentCount != 1 ? valueConverter(apiData.statistics.commentCount) + ' comments' : apiData.statistics.commentCount + ' comment')}
         </h4>
         {commentData.map((item, index) => {
           return (
             <div className="comment" key={index}>
               <img
-                src={item.snippet.topLevelComment.snippet.authorProfileImageUrl}
-                alt=""
+                src={item.snippet.topLevelComment.snippet.authorProfileImageUrl || {user_profile}}
+                alt=''
               />
               <div>
                 <h3>
-                  {item.snippet.topLevelComment.snippet.authorDisplayName}{" "}
+                  {item.snippet.topLevelComment.snippet.authorDisplayName}
                   <span>
                     {moment(item.snippet.topLevelComment.updatedAt).fromNow()}
                   </span>
@@ -136,6 +147,9 @@ const PlayVideo = () => {
             </div>
           );
         })}
+        <button className="comment-btn ">
+            Show More
+        </button>
       </div>
     </div>
   );
