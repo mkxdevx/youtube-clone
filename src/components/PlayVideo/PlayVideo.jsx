@@ -15,13 +15,12 @@ import { useParams } from "react-router-dom";
 const PlayVideo = () => {
   const { videoId } = useParams();
   const characterLimit = 310;
-  const commentLimit = 2;
 
   const [apiData, setApiData] = useState(null);
   const [channelData, setChannelData] = useState(null);
   const [commentData, setCommentData] = useState([]);
   const [desIsExpanded, setDesIsExpanded] = useState(false);
-
+  const [commentIsExpanded, setCommentIsExpanded] = useState(false);
 
   async function fetchVideoData() {
     // fetching videos data
@@ -106,50 +105,91 @@ const PlayVideo = () => {
         <button>Subscribe</button>
       </div>
       <div className="vid-description">
-        <p>{apiData && (desIsExpanded ? `${apiData.snippet.description}` : `${apiData.snippet.description.slice(0, characterLimit) + '...'}`)}</p>
+        <p>
+          {apiData &&
+            (desIsExpanded
+              ? `${apiData.snippet.description}`
+              : `${apiData.snippet.description.slice(0, characterLimit)}`)}
+        </p>
         <div className="center">
           <button
-            className={`toggle-button ${characterLimit >= (apiData && apiData.snippet.description.length) && 'hide-button'}`}
+            className={`toggle-button ${characterLimit >= (apiData && apiData.snippet.description.length) && "hide-button"}`}
             onClick={() => setDesIsExpanded(!desIsExpanded)}
           >
-            {desIsExpanded ? 'Hide' : 'Show More'}
+            {desIsExpanded ? "Hide" : "Show More"}
           </button>
         </div>
         <hr />
         <h4>
-          {apiData && (apiData.statistics.commentCount != 1 ? valueConverter(apiData.statistics.commentCount) + ' comments' : apiData.statistics.commentCount + ' comment')}
+          {apiData &&
+            (+apiData.statistics.commentCount !== 1
+              ? valueConverter(apiData.statistics.commentCount) + " comments"
+              : apiData.statistics.commentCount + " comment")}
         </h4>
-        {commentData.map((item, index) => {
-          return (
-            <div className="comment" key={index}>
-              <img
-                src={item.snippet.topLevelComment.snippet.authorProfileImageUrl || {user_profile}}
-                alt=''
-              />
-              <div>
-                <h3>
-                  {item.snippet.topLevelComment.snippet.authorDisplayName}
-                  <span>
-                    {moment(item.snippet.topLevelComment.updatedAt).fromNow()}
-                  </span>
-                </h3>
-                <p>{item.snippet.topLevelComment.snippet.textOriginal}</p>
-                <div className="comment-action">
-                  <img src={like} alt="" />
-                  <span>
-                    {valueConverter(
-                      item.snippet.topLevelComment.snippet.likeCount,
-                    )}
-                  </span>
-                  <img src={dislike} alt="" />
+        {commentIsExpanded
+          ? commentData.map((item, index) => (
+              <div className="comment" key={index}>
+                <img
+                  src={
+                    item.snippet.topLevelComment.snippet
+                      .authorProfileImageUrl || { user_profile }
+                  }
+                  alt=""
+                />
+                <div>
+                  <h3>
+                    {item.snippet.topLevelComment.snippet.authorDisplayName}
+                    <span>
+                      {moment(item.snippet.topLevelComment.updatedAt).fromNow()}
+                    </span>
+                  </h3>
+                  <p>{item.snippet.topLevelComment.snippet.textOriginal}</p>
+                  <div className="comment-action">
+                    <img src={like} alt="" />
+                    <span>
+                      {valueConverter(
+                        item.snippet.topLevelComment.snippet.likeCount,
+                      )}
+                    </span>
+                    <img src={dislike} alt="" />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-        <button className="comment-btn ">
-            Show More
-        </button>
+            ))
+          : commentData.slice(0, 2).map((item, index) => (
+              <div className="comment" key={index}>
+                <img
+                  src={
+                    item.snippet.topLevelComment.snippet
+                      .authorProfileImageUrl || { user_profile }
+                  }
+                  alt=""
+                />
+                <div>
+                  <h3>
+                    {item.snippet.topLevelComment.snippet.authorDisplayName}
+                    <span>
+                      {moment(item.snippet.topLevelComment.updatedAt).fromNow()}
+                    </span>
+                  </h3>
+                  <p>{item.snippet.topLevelComment.snippet.textOriginal}</p>
+                  <div className="comment-action">
+                    <img src={like} alt="" />
+                    <span>
+                      {valueConverter(
+                        item.snippet.topLevelComment.snippet.likeCount,
+                      )}
+                    </span>
+                    <img src={dislike} alt="" />
+                  </div>
+                </div>
+              </div>
+            ))}
+        <div className="comment-btn">
+          <button onClick={() => setCommentIsExpanded(!commentIsExpanded)}>
+            {commentIsExpanded ? "Hide" : "Show More"}
+          </button>
+        </div>
       </div>
     </div>
   );
