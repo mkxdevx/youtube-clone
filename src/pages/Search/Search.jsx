@@ -1,94 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Search.css";
 import thumbnail1 from "../../assets/thumbnail1.png";
+import { useOutletContext, useSearchParams } from "react-router-dom";
+import axios from "axios";
+import { API_KEY } from "../../data";
+import moment from "moment";
+import { decodeHTMLEntities } from "../../data";
 
 const Search = () => {
+  const { sidebar } = useOutletContext();
+  const [searchParams] = useSearchParams();
+  const [results, setResults] = useState([]);
+  const searchQuery = searchParams.get("q");
+
+  async function fetchSearchData() {
+    if (!searchQuery) {
+      return;
+    }
+
+    const resultsData = await axios.get(
+      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${searchQuery}&key=${API_KEY}`,
+    );
+    const { items } = resultsData.data;
+    setResults(items);
+
+  }
+
+  useEffect(() => {
+    fetchSearchData();
+  }, [searchQuery]);
+
   return (
     <div className="search-results">
-      <div className="video-card">
-        <img src={thumbnail1} alt="" />
-        <div className="video-description">
-          <h2>Adele - Hello (Official Music Video)</h2>
-          <p>3.2B views &bull; 10 years ago</p>
-          <h3>Adele</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus
-            ullam, vero magni ratione labore provident, vel quas delectus
-            nostrum unde totam rem laboriosam reiciendis, placeat mollitia
-            perferendis distinctio minus sapiente!
-          </p>
-        </div>
-      </div>
-      <div className="video-card">
-        <img src={thumbnail1} alt="" />
-        <div className="video-description">
-          <h2>Adele - Hello (Official Music Video)</h2>
-          <p>3.2B views &bull; 10 years ago</p>
-          <h3>Adele</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus
-            ullam, vero magni ratione labore provident, vel quas delectus
-            nostrum unde totam rem laboriosam reiciendis, placeat mollitia
-            perferendis distinctio minus sapiente!
-          </p>
-        </div>
-      </div>
-      <div className="video-card">
-        <img src={thumbnail1} alt="" />
-        <div className="video-description">
-          <h2>Adele - Hello (Official Music Video)</h2>
-          <p>3.2B views &bull; 10 years ago</p>
-          <h3>Adele</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus
-            ullam, vero magni ratione labore provident, vel quas delectus
-            nostrum unde totam rem laboriosam reiciendis, placeat mollitia
-            perferendis distinctio minus sapiente!
-          </p>
-        </div>
-      </div>
-      <div className="video-card">
-        <img src={thumbnail1} alt="" />
-        <div className="video-description">
-          <h2>Adele - Hello (Official Music Video)</h2>
-          <p>3.2B views &bull; 10 years ago</p>
-          <h3>Adele</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus
-            ullam, vero magni ratione labore provident, vel quas delectus
-            nostrum unde totam rem laboriosam reiciendis, placeat mollitia
-            perferendis distinctio minus sapiente!
-          </p>
-        </div>
-      </div>
-      <div className="video-card">
-        <img src={thumbnail1} alt="" />
-        <div className="video-description">
-          <h2>Adele - Hello (Official Music Video)</h2>
-          <p>3.2B views &bull; 10 years ago</p>
-          <h3>Adele</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus
-            ullam, vero magni ratione labore provident, vel quas delectus
-            nostrum unde totam rem laboriosam reiciendis, placeat mollitia
-            perferendis distinctio minus sapiente!
-          </p>
-        </div>
-      </div>
-      <div className="video-card">
-        <img src={thumbnail1} alt="" />
-        <div className="video-description">
-          <h2>Adele - Hello (Official Music Video)</h2>
-          <p>3.2B views &bull; 10 years ago</p>
-          <h3>Adele</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus
-            ullam, vero magni ratione labore provident, vel quas delectus
-            nostrum unde totam rem laboriosam reiciendis, placeat mollitia
-            perferendis distinctio minus sapiente!
-          </p>
-        </div>
-      </div>
+      {results &&
+        results.map((item, index) => {
+          return (
+            <div className="video-card" key={index}>
+              <img src={item.snippet.thumbnails.medium.url} alt="" />
+              <div className="video-description">
+                <h2>{decodeHTMLEntities(item.snippet.title)}</h2>
+                <p>{moment(item.snippet.publishedAt).fromNow()}</p>
+                <h3>{item.snippet.channelTitle}</h3>
+                <p>
+                  {item.snippet.description}
+                </p>
+              </div>
+            </div>
+          );
+        })}
     </div>
   );
 };

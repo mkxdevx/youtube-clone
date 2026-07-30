@@ -9,3 +9,10 @@ export function valueConverter(value) {
     return value;
   }
 }
+
+export function decodeHTMLEntities(text) {
+  if (!text) return "";
+  const parser = new DOMParser();
+  const decoded = parser.parseFromString(text, "text/html");
+  return decoded.body.textContent;
+}
