@@ -29,3 +29,22 @@
     font-size: 14px;
 }
 
+@media (max-width: 640px) {
+    .feed {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 10px;
+    }
+    .card {
+        margin-bottom: 12px;
+    }
+    .card img {
+        border-radius: 12px;
+    }
+    .card h2,
+    .card h3,
+    .card p {
+        margin-left: 5px;
+    }
+}

@@ -136,10 +136,6 @@
     align-items: center;
 }
 
-.hide-button {
-    display: none;
-}
-
 .comment {
     display: flex;
     align-items: flex-start;
@@ -190,10 +186,15 @@
 
 .comment-btn button {
     padding: 8px 0;
-    border: 1px solid #5a5a5a;
+    border: none;
+    color: #5a5a5a;
     border-radius: 20px;
     width: 50%;
     margin-bottom: 24px;
+}
+
+.hide-btn {
+    display: none;
 }
 
 @media (max-width: 900px) {

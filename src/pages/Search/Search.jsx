@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Search.css";
 import thumbnail1 from "../../assets/thumbnail1.png";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import { Link, useOutletContext, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { API_KEY } from "../../data";
 import moment from "moment";
@@ -23,7 +23,6 @@ const Search = () => {
     );
     const { items } = resultsData.data;
     setResults(items);
-
   }
 
   useEffect(() => {
@@ -31,21 +30,30 @@ const Search = () => {
   }, [searchQuery]);
 
   return (
-    <div className="search-results">
+    <div className={`search-results ${sidebar || "large-search-results"}`}>
       {results &&
         results.map((item, index) => {
+          const videoId = item.id.videoId;
+          const categoryId = item.snippet.categoryId || "0";
+          if (!videoId) {
+            return;
+          }
           return (
-            <div className="video-card" key={index}>
-              <img src={item.snippet.thumbnails.medium.url} alt="" />
-              <div className="video-description">
-                <h2>{decodeHTMLEntities(item.snippet.title)}</h2>
-                <p>{moment(item.snippet.publishedAt).fromNow()}</p>
-                <h3>{item.snippet.channelTitle}</h3>
-                <p>
-                  {item.snippet.description}
-                </p>
+            <Link to={`/video/${categoryId}/${videoId}`} key={index}>
+              {" "}
+              <div className="video-card">
+                <img
+                  src={item.snippet.thumbnails.medium.url || thumbnail1}
+                  alt=""
+                />
+                <div className="video-description">
+                  <h2>{decodeHTMLEntities(item.snippet.title)}</h2>
+                  <p>{moment(item.snippet.publishedAt).fromNow()}</p>
+                  <h3>{item.snippet.channelTitle}</h3>
+                  <p>{item.snippet.description}</p>
+                </div>
               </div>
-            </div>
+            </Link>
           );
         })}
     </div>

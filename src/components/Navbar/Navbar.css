@@ -60,9 +60,6 @@ button {
 }
 
 @media (max-width: 900px) {
-    .menu-icon{
-        display: none;
-    }
     .nav-right img {
         display: none;
     }
@@ -76,5 +73,14 @@ button {
     }
     .nav-middle .search-box input {
         width: 300px;
+    }
+}
+
+@media (max-width: 640px) {
+    .menu-icon {
+        display: none;
+    }
+    .nav-middle .search-box input {
+        width: 200px;
     }
 }

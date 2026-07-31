@@ -46,6 +46,7 @@ const PlayVideo = () => {
     );
 
     setCommentData(commentDetails.data.items);
+
   }
 
   useEffect(() => {
@@ -69,7 +70,7 @@ const PlayVideo = () => {
       <h3>{apiData && apiData.snippet.title}</h3>
       <div className="play-video-info">
         <p>
-          {apiData && valueConverter(apiData.statistics.viewCount)} views &bull;
+          {apiData && valueConverter(apiData.statistics.viewCount)} views &bull;{" "}
           {apiData && moment(apiData.snippet.publishedAt).fromNow()}
         </p>
         <div>
@@ -98,7 +99,7 @@ const PlayVideo = () => {
           <p>{apiData && apiData.snippet.channelTitle}</p>
           <span>
             {channelData &&
-              valueConverter(channelData.statistics.subscriberCount)}
+              valueConverter(channelData.statistics.subscriberCount)}{" "}
             Subscribers
           </span>
         </div>
@@ -113,7 +114,7 @@ const PlayVideo = () => {
         </p>
         <div className="center">
           <button
-            className={`toggle-button ${characterLimit >= (apiData && apiData.snippet.description.length) && "hide-button"}`}
+            className={`toggle-button ${characterLimit >= (apiData && apiData.snippet.description.length) && "hide-btn"}`}
             onClick={() => setDesIsExpanded(!desIsExpanded)}
           >
             {desIsExpanded ? "Hide" : "Show More"}
@@ -127,7 +128,7 @@ const PlayVideo = () => {
               : apiData.statistics.commentCount + " comment")}
         </h4>
         {commentIsExpanded
-          ? commentData.map((item, index) => (
+          ? commentData && commentData.map((item, index) => (
               <div className="comment" key={index}>
                 <img
                   src={
@@ -140,7 +141,7 @@ const PlayVideo = () => {
                   <h3>
                     {item.snippet.topLevelComment.snippet.authorDisplayName}
                     <span>
-                      {moment(item.snippet.topLevelComment.updatedAt).fromNow()}
+                      {moment(item.snippet.topLevelComment.snippet.publishedAt).fromNow()}
                     </span>
                   </h3>
                   <p>{item.snippet.topLevelComment.snippet.textOriginal}</p>
@@ -156,12 +157,11 @@ const PlayVideo = () => {
                 </div>
               </div>
             ))
-          : commentData.slice(0, 2).map((item, index) => (
+          : commentData && commentData.slice(0, 2).map((item, index) => (
               <div className="comment" key={index}>
                 <img
                   src={
-                    item.snippet.topLevelComment.snippet
-                      .authorProfileImageUrl || { user_profile }
+                    item.snippet.topLevelComment.snippet.authorProfileImageUrl
                   }
                   alt=""
                 />
@@ -169,7 +169,9 @@ const PlayVideo = () => {
                   <h3>
                     {item.snippet.topLevelComment.snippet.authorDisplayName}
                     <span>
-                      {moment(item.snippet.topLevelComment.updatedAt).fromNow()}
+                      {moment(
+                        item.snippet.topLevelComment.snippet.publishedAt,
+                      ).fromNow()}
                     </span>
                   </h3>
                   <p>{item.snippet.topLevelComment.snippet.textOriginal}</p>
@@ -185,7 +187,7 @@ const PlayVideo = () => {
                 </div>
               </div>
             ))}
-        <div className="comment-btn">
+        <div className={`comment-btn ${commentData || "hide-btn"}`}>
           <button onClick={() => setCommentIsExpanded(!commentIsExpanded)}>
             {commentIsExpanded ? "Hide" : "Show More"}
           </button>
