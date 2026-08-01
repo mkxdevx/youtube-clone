@@ -18,3 +18,21 @@
         padding-right: 5%;
     }
 }
+
+@media (max-width: 820px) {
+    .container {
+        padding-left: 16%;
+    }
+    .large-container {
+        padding-left: 8%;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-left: 18%;
+    }
+    .large-container {
+        padding-left: 10%;
+    }
+}
